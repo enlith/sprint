@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>Quick JQuery Ajax Request</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <!-- include the jquery lib -->
+        <script type="text/javascript" src="jquery.js"></script>
+        <script type="text/javascript">
+            var ajaxSubmit = function(formEl) {
+                // fetch where we want to submit the form to
+                var url = $(formEl).attr('action');
+
+                // fetch the data for the form
+                var data = $(formEl).serializeArray();
+
+                // setup the ajax request
+                $.ajax({
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                    success: function() {
+                        if(rsp.success) {
+                            alert('form has been posted successfully');
+                        }
+                    }
+                });
+
+                // return false so the form does not actually
+                // submit to the page
+                return false;
+            }
+        </script>
+
+    </head>
+    <body>
+
+        <form method="post" action="ajax_save.php"
+              onSubmit="return ajaxSubmit(this);">
+            Value: <input type="text" name="my_value" />
+            <input type="submit" name="form_submit" value="Go" />
+        </form>
+
+    </body>
+</html>

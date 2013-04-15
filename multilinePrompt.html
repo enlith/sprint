@@ -1,0 +1,25 @@
+<html>
+<head>
+<title>Hello World Window</title>
+<link rel="stylesheet" type="text/css" href="ext-3.0.0/resources/css/ext-all.css" />
+<script type="text/javascript" src="ext-3.0.0/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="ext-3.0.0/ext-all.js"></script>
+</head>
+<script type="text/javascript">
+
+
+
+Ext.onReady(function(){
+    Ext.Msg.prompt('Hey!', 'Tell me something', function(btn, text){
+      if (btn == 'ok'){
+        var data = text;
+      }
+    }, this, true, 'hi');
+});
+
+</script>
+<body>
+    <div id="mainContent">
+    </div>
+</body>
+</html>
