@@ -12,7 +12,7 @@ require_once( 'sprint_api.php' );
 <script src="scripts/jquery-1.9.1.min.js" type="text/javascript"></script>
 <script src="scripts/jquery-ui.js" type="text/javascript"></script>
 <script type="text/javascript">
-		var g_id;
+		var g_selected_obj_name;
 		var g_status_imgs = new Array(); 
     $(document).ready(function ()
     {
@@ -78,7 +78,7 @@ require_once( 'sprint_api.php' );
             {
             	src = "images/down.gif";
             }
-            $("#" + g_id).attr("src",src);
+            $('[name="'+g_selected_obj_name+'"]').attr("src",src);
             HideDialog();
             e.preventDefault();
         });
@@ -86,47 +86,39 @@ require_once( 'sprint_api.php' );
     $('#XFT').bind('change', function(e) {
     	var value = $(this).val(); 
     	$.ajax({
-  type: "POST",
-  url: "generate_review_table.php",
-  data: { sr_id: value }
-}).done(function( msg ) {
-	//generate_review_table.php
-//  alert( "Data Saved: " + msg );
-  $("#mytable").html(msg);
-});
-//    	$.ajax({ type: "GET", url: "test.php", data: {sr_id: value}, function(data) {
-//			$("#mytable").html(data);
-//			});
-    	
-//    	$("#mytable").load("generate_review_table.php?sr_id=".value);
-//    	$.ajax({
-//    		url: "dialog.html",
-//    		cache: false}).done(function( html ) {
-//  			$("#mytable").html("TEST");
-//			});
+  			type: "POST",
+  			url: "generate_review_table.php",
+  			data: { sr_id: value }
+			}).done(function( msg ) {
+			  $("#mytable").html(msg);
+		});
     });
+    
+    $.ajax({type:'POST', url: 'Retrospectivesave.php', data:$('#ContactForm').serialize(), success: function(response) {
+    $('#ContactForm').find('.form_result').html(response);
+}});
         
     });
 
-		$(document).on("click", 'img[id^="Status_"]', function(){ 
-			var id = $(this).attr("id");
-		  updateStatus(id); 
+		$(document).on("click", 'img[name^="Status_"]', function(){ 
+			var name = $(this).attr("name");
+		  updateStatus(name); 
 		});
 		
-		$(document).on("click", 'img[id^="Trend_"]', function(){ 
-    	var id = $(this).attr("id");
-    	updateTrend(id); 
+		$(document).on("click", 'img[name^="Trend_"]', function(){ 
+    	var name = $(this).attr("name");
+    	updateTrend(name); 
 		});
 
-		$(document).on("click", 'div[id^="Comment_"]', function(){ 
+		$(document).on("click", 'div[name^="Comment_"]', function(){ 
     	var comment = $(this).html();
     	var new_comment = prompt('What is your comment?', comment);
     	if (new_comment) $(this).html(new_comment);
 		});
 
 		$(document).on("click", '#save_retros', function(){ 
-    	var id = $(this).attr("id");
-    	updateTrend(id); 
+    	var name = $(this).attr("name");
+    	updateTrend(name); 
 		});
 
 
@@ -139,9 +131,9 @@ require_once( 'sprint_api.php' );
 //		});
 		
 
-    function ShowDialog(id)
+    function ShowDialog(name)
     {
-    		g_id = id;
+    		g_selected_obj_name = name;
         $("#overlay").show();
         $("#dialog").fadeIn(300);
 				$("#overlay").unbind("click");
@@ -160,7 +152,7 @@ require_once( 'sprint_api.php' );
 //        if (new_comment) document.getElementById(id).innerHTML = new_comment;
 //    }
 //
-    function updateStatus(id)
+    function updateStatus(name)
     {
     	$("#options img[id=option1]").attr("src","images/green.gif");
     	$("#options img[id=option2]").attr("src","images/yellow.gif");
@@ -169,10 +161,10 @@ require_once( 'sprint_api.php' );
     	$("#options input[id=option2]").attr("value","Ugly");
     	$("#options input[id=option3]").attr("value","Bad");
     	$("#web_dialog_title").html("How was the status?");
-    	ShowDialog(id);
+    	ShowDialog(name);
     }
 
-    function updateTrend(id)
+    function updateTrend(name)
     {
     	$("#options img[id=option1]").attr("src","images/flat.gif");
     	$("#options img[id=option2]").attr("src","images/up.gif");
@@ -181,7 +173,7 @@ require_once( 'sprint_api.php' );
     	$("#options input[id=option2]").attr("value","Up");
     	$("#options input[id=option3]").attr("value","Down");
     	$("#web_dialog_title").html("How was the trend?");
-    	ShowDialog(id);
+    	ShowDialog(name);
     }
 
   
@@ -219,7 +211,7 @@ require_once( 'sprint_api.php' );
 </head>
 
 <body>
-<form method="post" action="Retrospectivesave.php">
+<form method="post" id="RetrospectiveForm" action="Retrospectivesave.php">
 <select id="XFT">
 <?php
 get_XFT_Masters();
@@ -236,51 +228,51 @@ get_XFT_Masters();
   </tr>
   <tr>
     <th scope="row" abbr="OPO" class="spec">OPO</th>
-    <td ><img border="0" src="images/green.gif" id="Status_1"  /></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_1" /></td>
-    <td ><div class="Comment" id="Comment_1" >Comment 1 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_1"  /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_1" /></td>
+    <td ><div class="Comment" name="Comment_1" >Comment 1 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="RADIATORS" class="spec">RADIATORS</th>
-    <td ><img border="0" src="images/green.gif" id="Status_2"  /></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_2" /></td>
-    <td ><div class="Comment" id="Comment_2" >Comment 2 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_2"  /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_2" /></td>
+    <td ><div class="Comment" name="Comment_2" >Comment 2 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="TEST HOTEL" class="spec">TEST HOTEL</th>
-    <td ><img border="0" src="images/green.gif" id="Status_3"  /></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_3" /></td>
-    <td ><div class="Comment" id="Comment_3" >Comment 3 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_3"  /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_3" /></td>
+    <td ><div class="Comment" name="Comment_3" >Comment 3 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="LINE" class="spec">LINE</th>
-    <td ><img border="0" src="images/green.gif" id="Status_4"  /></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_4" /></td>
-    <td ><div class="Comment" id="Comment_4" >Comment 4 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_4"  /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_4" /></td>
+    <td ><div class="Comment" name="Comment_4" >Comment 4 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="TOOL/ENVIRONMENT" class="spec">TOOL/ENVIRONMENT</th>
-    <td ><img border="0" src="images/green.gif" id="Status_5"  /></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_5" /></td>
-    <td ><div class="Comment" id="Comment_5" >Comment 5 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_5"  /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_5" /></td>
+    <td ><div class="Comment" name="Comment_5" >Comment 5 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="CI" class="spec">CI</th>
-    <td ><img border="0" src="images/green.gif" id="Status_6"  /></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_6" /></td>
-    <td ><div class="Comment" id="Comment_6" >Comment 6 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_6"  /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_6" /></td>
+    <td ><div class="Comment" name="Comment_6" >Comment 6 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="3GSIM" class="spec">3GSIM</th>
-    <td ><img border="0" src="images/green.gif" id="Status_7"  /></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_7" /></td>
-    <td ><div class="Comment" id="Comment_7" >Comment 7 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_7"  /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_7" /></td>
+    <td ><div class="Comment" name="Comment_7" >Comment 7 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="DEPENDENCIES" class="spec">DEPENDENCIES</th>
-    <td ><img border="0" src="images/green.gif" id="Status_8"  /></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_8" /></td>
-    <td ><div class="Comment" id="Comment_8" >Comment 8  ...</div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_8"  /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_8" /></td>
+    <td ><div class="Comment" name="Comment_8" >Comment 8  ...</div></td>
   </tr>
 </table>
 <div class="ui-widget"><input id="sprint_name"> </input><input type="image" id="save_retros" src="images/save.jpg" alt="Submit"/></div>

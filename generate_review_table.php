@@ -42,12 +42,12 @@ $t_sprint_retros_id = gpc_get_int( 'sr_id', 0 );
 		foreach ($t_columns as $id => $column) {
 			if("Comment" == $column)
 			{
-				echo '    <td ><div class="'.$column.'" id="'.$column.'_'.$t_item_index.'"  >'.$t_item_values[$item_id][$column].'</div></td>
+				echo '    <td ><div class="'.$column.'" name="'.$column.'_'.$t_item_index.'"  >'.$t_item_values[$item_id][$column].'</div></td>
 ';
 			}
 			else
 			{
-				echo '    <td ><img class="'.$column.'" src="'.get_img_src_by_item_value($column,$t_item_values[$item_id][$column]).'" id="'.$column.'_'.$t_item_index.'"  /></td>
+				echo '    <td ><img class="'.$column.'" src="'.get_img_src_by_item_value($column,$t_item_values[$item_id][$column]).'" name="'.$column.'_'.$t_item_index.'"  /></td>
 ';
 			}
 	  }
