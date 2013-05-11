@@ -22,33 +22,6 @@ require_once( 'sprint_api.php' );
             HideDialog();
             e.preventDefault();
         });
-				
-//				$('img[id^="Status_"]').click(function (e)
-//		    {
-//		    	var id = $(this).attr("id");
-//		    	updateStatus(id);
-//		    });
-//
-//				$('img[id^="Trend_"]').click(function (e)
-//		    {
-//		    	var id = $(this).attr("id");
-//		    	updateTrend(id);
-//		    });
-//
-//				$('div[id^="Comment_"]').click(function (e)
-//		    {
-//		    	var comment = $(this).html();
-//		    	var new_comment = prompt('What is your comment?', comment);
-//		    	if (new_comment) $(this).html(new_comment);
-//		    });
-//
-
-//				$('div[id^="Comment_"]').parent().click(function (e)
-//		    {
-//		    	var comment = $(this).find('div[id^="Comment_"]').html();
-//		    	var new_comment = prompt('What is your comment?', comment);
-//		    	if (new_comment) $(this)..find('div[id^="Comment_"]').html(new_comment);
-//		    });
 		    
         $("#btnSubmit").click(function (e)
         {
@@ -111,19 +84,16 @@ require_once( 'sprint_api.php' );
 
 		$(document).on("click", 'img[name^="Status_"]', function(){ 
 			var name = $(this).attr("name");
-			alert($(this).attr("value"));
 		  updateStatus(name); 
 		});
 		
 		$(document).on("click", 'img[name^="Trend_"]', function(){ 
     	var name = $(this).attr("name");
-    	alert($(this).attr("value"));
     	updateTrend(name); 
 		});
 
 		$(document).on("click", 'div[name^="Comment_"]', function(){ 
     	var comment = $(this).html();
-    	alert($(this).attr("value"));
     	var new_comment = prompt('What is your comment?', comment);
     	if (new_comment) 
     	{
@@ -136,16 +106,6 @@ require_once( 'sprint_api.php' );
     	var name = $(this).attr("name");
     	updateTrend(name); 
 		});
-
-
-//has problem	
-//		$(document).on("click",'td[id^="Comment_"]', function(){
-//			var comment_div =  $(this).find('div[id^="Comment_"]');
-//    	var comment = comment_div.html();
-//    	var new_comment = prompt('What is your comment?', comment);
-//    	if (new_comment) comment_div.html(new_comment);
-//		});
-		
 
     function ShowDialog(name)
     {
@@ -161,13 +121,6 @@ require_once( 'sprint_api.php' );
         $("#dialog").fadeOut(300);
     }
 
-//    function updateComment(id)
-//    {
-//        var comment = document.getElementById(id).innerHTML
-//        var new_comment = prompt('What is your comment?', comment);
-//        if (new_comment) document.getElementById(id).innerHTML = new_comment;
-//    }
-//
     function updateStatus(name)
     {
     	$("#options img[id=option1]").attr("src","images/green.gif");
@@ -294,11 +247,6 @@ get_XFT_Masters();
 <div class="ui-widget"><input id="sprint_name"> </input><input type="image" id="save_retros" src="images/save.jpg" alt="Submit"/></div>
 </form>
 
-<!--
-<div id="comment_dialog">
-	<textarea rows="5" cols="30" id="popup_prompt"></textarea>
-</div>
--->
     <div id="overlay" class="web_dialog_overlay"></div>
     <div id="dialog" class="web_dialog">
         <table style="width: 100%; border: 0px;" cellpadding="3" cellspacing="0">
