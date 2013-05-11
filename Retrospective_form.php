@@ -53,32 +53,41 @@ require_once( 'sprint_api.php' );
         $("#btnSubmit").click(function (e)
         {
             var option = $("#options input:radio:checked").val();
+            var obj = $('[name="'+g_selected_obj_name+'"]');
             var src = "images/red.gif";
+            var value = "1";
             if (option == "Good")
             {
             	src = "images/green.gif";
+            	value = "1";
             }
             else if (option == "Ugly")
             {
             	src = "images/yellow.gif";
+            	value = "2";
             }
             else if (option == "Bad")
             {
             	src = "images/red.gif";
+            	value = "3";
             }
             else if (option == "Flat")
             {
             	src = "images/flat.gif";
+            	value = "1";
             }
             else if (option == "Up")
             {
             	src = "images/up.gif";
+            	value = "2";
             }
             else if (option == "Down")
             {
             	src = "images/down.gif";
+            	value = "3";
             }
-            $('[name="'+g_selected_obj_name+'"]').attr("src",src);
+            obj.attr("src",src);
+            obj.attr("value",value);
             HideDialog();
             e.preventDefault();
         });
@@ -102,18 +111,25 @@ require_once( 'sprint_api.php' );
 
 		$(document).on("click", 'img[name^="Status_"]', function(){ 
 			var name = $(this).attr("name");
+			alert($(this).attr("value"));
 		  updateStatus(name); 
 		});
 		
 		$(document).on("click", 'img[name^="Trend_"]', function(){ 
     	var name = $(this).attr("name");
+    	alert($(this).attr("value"));
     	updateTrend(name); 
 		});
 
 		$(document).on("click", 'div[name^="Comment_"]', function(){ 
     	var comment = $(this).html();
+    	alert($(this).attr("value"));
     	var new_comment = prompt('What is your comment?', comment);
-    	if (new_comment) $(this).html(new_comment);
+    	if (new_comment) 
+    	{
+    		$(this).html(new_comment);
+    		$(this).attr("value",new_comment);
+    	}
 		});
 
 		$(document).on("click", '#save_retros', function(){ 
@@ -228,51 +244,51 @@ get_XFT_Masters();
   </tr>
   <tr>
     <th scope="row" abbr="OPO" class="spec">OPO</th>
-    <td ><img border="0" src="images/green.gif" name="Status_1"  /></td>
-    <td ><img border="0" src="images/flat.gif" name="Trend_1" /></td>
-    <td ><div class="Comment" name="Comment_1" >Comment 1 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_1" value="1" /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_1" value="1" /></td>
+    <td ><div class="Comment" name="Comment_1" value="Comment 1 ... " >Comment 1 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="RADIATORS" class="spec">RADIATORS</th>
-    <td ><img border="0" src="images/green.gif" name="Status_2"  /></td>
-    <td ><img border="0" src="images/flat.gif" name="Trend_2" /></td>
-    <td ><div class="Comment" name="Comment_2" >Comment 2 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_2" value="1" /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_2" value="1" /></td>
+    <td ><div class="Comment" name="Comment_2" value="Comment 2 ... " >Comment 2 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="TEST HOTEL" class="spec">TEST HOTEL</th>
-    <td ><img border="0" src="images/green.gif" name="Status_3"  /></td>
-    <td ><img border="0" src="images/flat.gif" name="Trend_3" /></td>
-    <td ><div class="Comment" name="Comment_3" >Comment 3 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_3" value="1" /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_3" value="1" /></td>
+    <td ><div class="Comment" name="Comment_3" value="Comment 3 ... " >Comment 3 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="LINE" class="spec">LINE</th>
-    <td ><img border="0" src="images/green.gif" name="Status_4"  /></td>
-    <td ><img border="0" src="images/flat.gif" name="Trend_4" /></td>
-    <td ><div class="Comment" name="Comment_4" >Comment 4 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_4" value="1" /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_4" value="1" /></td>
+    <td ><div class="Comment" name="Comment_4" value="Comment 4 ... " >Comment 4 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="TOOL/ENVIRONMENT" class="spec">TOOL/ENVIRONMENT</th>
-    <td ><img border="0" src="images/green.gif" name="Status_5"  /></td>
-    <td ><img border="0" src="images/flat.gif" name="Trend_5" /></td>
-    <td ><div class="Comment" name="Comment_5" >Comment 5 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_5" value="1" /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_5" value="1" /></td>
+    <td ><div class="Comment" name="Comment_5" value="Comment 5 ... " >Comment 5 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="CI" class="spec">CI</th>
-    <td ><img border="0" src="images/green.gif" name="Status_6"  /></td>
-    <td ><img border="0" src="images/flat.gif" name="Trend_6" /></td>
-    <td ><div class="Comment" name="Comment_6" >Comment 6 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_6" value="1" /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_6" value="1" /></td>
+    <td ><div class="Comment" name="Comment_6" value="Comment 6 ... " >Comment 6 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="3GSIM" class="spec">3GSIM</th>
-    <td ><img border="0" src="images/green.gif" name="Status_7"  /></td>
-    <td ><img border="0" src="images/flat.gif" name="Trend_7" /></td>
-    <td ><div class="Comment" name="Comment_7" >Comment 7 ... </div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_7" value="1" /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_7" value="1" /></td>
+    <td ><div class="Comment" name="Comment_7" value="Comment 7 ... " >Comment 7 ... </div></td>
   </tr>
   <tr>
     <th scope="row" abbr="DEPENDENCIES" class="spec">DEPENDENCIES</th>
-    <td ><img border="0" src="images/green.gif" name="Status_8"  /></td>
-    <td ><img border="0" src="images/flat.gif" name="Trend_8" /></td>
-    <td ><div class="Comment" name="Comment_8" >Comment 8  ...</div></td>
+    <td ><img border="0" src="images/green.gif" name="Status_8" value="1" /></td>
+    <td ><img border="0" src="images/flat.gif" name="Trend_8" value="1" /></td>
+    <td ><div class="Comment" name="Comment_8" value="Comment 8 ... " >Comment 8  ...</div></td>
   </tr>
 </table>
 <div class="ui-widget"><input id="sprint_name"> </input><input type="image" id="save_retros" src="images/save.jpg" alt="Submit"/></div>
