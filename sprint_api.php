@@ -17,68 +17,8 @@ function &get_XFT_Masters(&$p_MastersArray)
 		echo '<option value="'.$row['ID'].'">'.$row['Name'].'</option>
 ';
 	}
-	mysql_free_result($result);
 	mysql_close($con);
 }
-
-function get_XFT_and_Sprints()
-{
-	global $g_hostname,$g_db_type,$g_database_name,$g_db_username,$g_db_password;
-	$con = mysql_connect($g_hostname, $g_db_username, $g_db_password) or die(mysql_error());
-	mysql_select_db($g_database_name, $con) or die(mysql_error());
-	$result = mysql_query("SELECT * FROM xft_table") or die(mysql_error());
-	echo '<select id="XFT">
-';
-	while($row = mysql_fetch_array($result))
-  {
-		echo '<option value="'.$row['ID'].'">'.$row['Name'].'</option>
-';
-	}
-	echo '</select>
-';
-	mysql_free_result($result);
-	$result = mysql_query("SELECT * FROM retrospective_table") or die(mysql_error());
-	echo '<select id="sprint_name">
-';
-	echo '<option value="0">New Sprint...</option>
-';
-	while($row = mysql_fetch_array($result))
-  {
-  	echo '<option value="'.$row['ID'].'">'.$row['Name'].'</option>
-';
-	}
-	echo '</select>
-';
-	mysql_free_result($result);
-	mysql_close($con);
-}
-
-function get_XFT_last_sprint_id($p_XFT_ID)
-{
-	$t_sprint_list = Array();
-	get_XFT_sprint_list($p_XFT_ID,$t_sprint_list);
-	return max(array_keys($t_sprint_list));
-}
-
-function &get_XFT_sprint_list($p_XFT_ID,&$p_sprint_list)
-{
-	global $g_hostname,$g_db_type,$g_database_name,$g_db_username,$g_db_password;
-	$con = mysql_connect($g_hostname, $g_db_username, $g_db_password) or die(mysql_error());
-	mysql_select_db($g_database_name, $con) or die(mysql_error());
-	$result = mysql_query("SELECT * FROM retrospective_table WHERE XFT_ID =".'"'.$p_XFT_ID.'"') or die(mysql_error());
-	echo '<option value="0">New Sprint...</option>
-';
-	while($row = mysql_fetch_array($result))
-  {
-  	$p_sprint_list[$row['ID']] = $row['Name'];
-  	echo '<option value="'.$row['ID'].'">'.$row['Name'].'</option>
-';
-	}
-	mysql_free_result($result);
-	mysql_close($con);
-	return $p_sprint_list;
-}
-
 
 /*
 SELECT `COLUMN_NAME` 
@@ -107,7 +47,6 @@ function &get_review_column(&$p_Columns, $p_table_name = "retros_review_items_ta
   		array_push($p_Columns, $row['COLUMN_NAME']);
   	}
 	}
-	mysql_free_result($result);
 	mysql_close($con);
 	return $p_Columns;
 }
@@ -124,13 +63,13 @@ function &get_review_items(&$p_Items)
   {
   	$p_Items[$row['ID']] = $row['ItemName'];
 	}
-	mysql_free_result($result);
 	mysql_close($con);
 	return $p_Items;
 }
 
 function get_img_src_by_item_value($p_review_item,$p_review_item_value)
 {
+	var_dump();
 	$t_image_src = "";
 	switch($p_review_item)
 	{
@@ -184,14 +123,13 @@ function &get_review_item_value_by_id(&$p_Items,$p_sprint_retros_id = 0)
 		$p_Items[$row['ItemID']]['Trend'] = $row[3];
 		$p_Items[$row['ItemID']]['Comment'] = $row[4];
 	}
-	mysql_free_result($result);
 	mysql_close($con);
 	return $p_Items;
 }
 
-function save_retrospective($p_retros_id)
+function save_retrospective()
 {
-	$t_retrospective_id = $p_retros_id;
+	$t_retrospective_id;
 	return $t_retrospective_id;
 }
 
