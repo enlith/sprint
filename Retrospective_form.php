@@ -3,6 +3,7 @@
 <?php
 require_once( 'gpc_api.php' );
 require_once( 'sprint_api.php' );
+$t_retrosid = gpc_get_int( 'retrosid', $t_retrosid );
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -16,7 +17,7 @@ require_once( 'sprint_api.php' );
 		var g_status_imgs = new Array(); 
     $(document).ready(function ()
     {
-    	
+    	$('#mytable').load('generate_sprint_list.php',{ sr_id: '<?php echo $t_retrosid; ?>' } );
         $("#btnClose").click(function (e)
         {
             HideDialog();
@@ -70,16 +71,62 @@ require_once( 'sprint_api.php' );
     	$.ajax({
   			type: "POST",
   			url: "generate_review_table.php",
+  			data: { xft_id: value }
+			}).done(function( msg ) {
+			  $("#sprint_name").html(msg);
+		});
+		
+//    $.ajax({
+//  			type: "POST",
+//  			url: "generate_sprint_list.php",
+//  			data: { sr_id: -1, xft_id: value }
+//			}).done(function( msg ) {
+//			  $("#mytable").html(msg);
+//			  $('[name="save_retros"]').attr("value",-1);
+//		});		
+
+		
+    });//$('#XFT').bind('change'
+    $('#sprint_name').bind('change', function(e) {
+    	var value = $(this).val();
+    	if(0 == value)
+    	{
+    		var sprint_name = prompt('What is new sprint name?', "Sprint_");
+	    	$.ajax({
+	  			type: "POST",
+	  			url: "generate_init_table.php",
+	  			data: { sr_id: value, sp_name: sprint_name}
+				}).done(function( msg ) {
+				  $("#mytable").html(msg);
+				  $("#new_sprint_name").attr("value",sprint_name);
+			});
+    	}
+    	else
+    	{
+	    	$.ajax({
+	  			type: "POST",
+	  			url: "generate_sprint_list.php",
+	  			data: { sr_id: value }
+				}).done(function( msg ) {
+				  $("#mytable").html(msg);
+				  $('[name="save_retros"]').attr("value",value);
+			});
+    	}
+
+    });//$('#sprint_name').bind('change'
+    $('#new_retros').bind('click', function(e) {
+    	var value = $(this).val(); 
+    	var sprint_name = prompt('What is new sprint name?', "Sprint_");
+    	$.ajax({
+  			type: "POST",
+  			url: "generate_init_table.php",
   			data: { sr_id: value }
 			}).done(function( msg ) {
 			  $("#mytable").html(msg);
 		});
-    });
-    
-    $.ajax({type:'POST', url: 'Retrospectivesave.php', data:$('#ContactForm').serialize(), success: function(response) {
-    $('#ContactForm').find('.form_result').html(response);
-}});
-        
+    });//$('#new_retros').bind('change'
+
+
     });
 
 		$(document).on("click", 'img[name^="Status_"]', function(){ 
@@ -103,8 +150,9 @@ require_once( 'sprint_api.php' );
 		});
 
 		$(document).on("click", '#save_retros', function(){ 
-    	var name = $(this).attr("name");
-    	updateTrend(name); 
+    	$.ajax({type:'POST', url: 'Retrospectivesave.php', data:$('#RetrospectiveForm').serialize(), success: function(response) {
+    	$('#sprint_name').html(response);
+			}});
 		});
 
     function ShowDialog(name)
@@ -181,11 +229,21 @@ require_once( 'sprint_api.php' );
 
 <body>
 <form method="post" id="RetrospectiveForm" action="Retrospectivesave.php">
-<select id="XFT">
+<div id="XFT_Sprint">
+	<select id="XFT">
 <?php
 get_XFT_Masters();
 ?>
-</select>
+	</select>
+	<select id="sprint_name">
+	</select>
+<!--
+	<input id="new_retros" type="image" name="new_retros" value="0" src="images/new.png" alt="New"/>
+-->
+</div>
+<!--
+<input id="sprint_name" value="Sprint_7" readonly> </input>
+-->
 <table id="mytable" cellspacing="0" summary="Sprint Retrospective" width="90%">
 <caption>How was the sprint </caption> 
   <tr>
@@ -244,7 +302,8 @@ get_XFT_Masters();
     <td ><div class="Comment" name="Comment_8" value="Comment 8 ... " >Comment 8  ...</div></td>
   </tr>
 </table>
-<div class="ui-widget"><input id="sprint_name"> </input><input type="image" id="save_retros" src="images/save.jpg" alt="Submit"/></div>
+<input name="new_sprint_name" type="hidden" value="">
+<div class="ui-widget"><input type="image" name="save_retros" value="<?php echo $t_retrosid ?>" src="images/save.jpg" alt="Submit"/></div>
 </form>
 
     <div id="overlay" class="web_dialog_overlay"></div>
