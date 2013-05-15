@@ -189,13 +189,53 @@ function &get_review_item_value_by_id(&$p_Items,$p_sprint_retros_id = 0)
 	return $p_Items;
 }
 
-function save_retrospective($p_retros_id)
+function save_retrospective($p_retros_id,&$p_status_array, &$p_trend_array, &$p_comment_array, $p_sprint_name = "", $p_xft_id = 0, $p_startweek = "")
 {
+	global $g_hostname,$g_db_type,$g_database_name,$g_db_username,$g_db_password;
 	$t_retrospective_id = $p_retros_id;
+	$t_table_name = "retrospective_table";
+	$con = mysql_connect($g_hostname, $g_db_username, $g_db_password) or die(mysql_error());
+	mysql_select_db($g_database_name, $con) or die(mysql_error());
+	if(0 == $p_retros_id)
+	{
+//INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)
+//VALUES ('Cardinal','Tom B. Erichsen','Skagen 21','Stavanger','4006','Norway');		
+		$query = "INSERT INTO  ".$t_table_name.' (Name, XFT_ID, StartWeek)
+							VALUES ("'.$p_sprint_name.'",
+							"'.$p_xft_id.'",
+							"'.$p_startweek.'")';
+		$result = mysql_query($query) or die(mysql_error());
+		$t_retrospective_id = mysql_insert_id($con);
+		#assuming status/trend/comment has same order and size.
+		$t_table_name = "retros_review_items_table";
+		for($i = 0 ; $i < count($p_status_array); ++$i)
+		{
+			$query = "INSERT INTO ".$t_table_name.' (SprintRetrosID,	ItemID,	Status,	Trend,	Comment)
+								VALUES ("'.$t_retrospective_id.'",
+								"'.($i+1).'",
+								"'.$p_status_array[$i].'",
+								"'.$p_trend_array[$i].'",
+								"'.$p_comment_array[$i].'")';
+			$result = mysql_query($query) or die(mysql_error());
+		}
+	}
+	else
+	{
+		#assuming status/trend/comment has same order and size.
+		$t_table_name = "retros_review_items_table";
+		for($i = 0 ; $i < count($p_status_array); ++$i)
+		{
+			$query = "UPDATE ".$t_table_name.' 
+								SET Status = "'.$p_status_array[$i].'",
+								 Trend = "'.$p_trend_array[$i].'",
+								 Comment = "'.$p_comment_array[$i].'" 
+								WHERE SprintRetrosID = '.$t_retrospective_id.' AND ItemID = '.($i+1);
+			$result = mysql_query($query) or die(mysql_error());
+		}
+	}
 	return $t_retrospective_id;
 }
 
 class SprintRetrospective{
-	
 	
 }

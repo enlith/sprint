@@ -17,7 +17,11 @@ $t_retrosid = gpc_get_int( 'retrosid', $t_retrosid );
 		var g_status_imgs = new Array(); 
     $(document).ready(function ()
     {
-      	$('#mytable').load('generate_sprint_list.php',{ sr_id: '<?php echo $t_retrosid; ?>' } );
+    		var retrosid = '<?php echo $t_retrosid; ?>';
+    		if(0 != retrosid)
+    		{
+    			$('#mytable').load('generate_sprint_list.php',{ sr_id: retrosid } );
+    		}
         $("#btnClose").click(function (e)
         {
             HideDialog();
@@ -87,13 +91,14 @@ $t_retrosid = gpc_get_int( 'retrosid', $t_retrosid );
     	if(0 == value)
     	{
     		var sprint_name = prompt('What is new sprint name?', "Sprint_");
+			  $('[name="new_sprint_name"]').attr("value",sprint_name);
+			  $('[name="save_retros"]').attr("value",value);
 	    	$.ajax({
 	  			type: "POST",
 	  			url: "generate_init_table.php",
 	  			data: { sr_id: value, sp_name: sprint_name}
 				}).done(function( msg ) {
 				  $("#mytable").html(msg);
-				  $("#new_sprint_name").attr("value",sprint_name);
 			});
     	}
     	else
@@ -148,10 +153,6 @@ $t_retrosid = gpc_get_int( 'retrosid', $t_retrosid );
     	}
 		});
 		
-		$( "form" ).on( "submit", function( event ) {
-  event.preventDefault();
-  alert( $(this).serialize() );
-});
 
 //		$(document).on("click", '#save_retros', function(e){
 //			e.preventDefault();
@@ -235,7 +236,7 @@ $t_retrosid = gpc_get_int( 'retrosid', $t_retrosid );
 <body>
 <form method="post" id="RetrospectiveForm" action="Retrospectivesave.php">
 <div id="XFT_Sprint">
-	<select id="XFT">
+	<select id="XFT" name="xft_id">
 <?php
 get_XFT_Masters();
 ?>
@@ -259,51 +260,51 @@ get_XFT_Masters();
   </tr>
   <tr>
     <th scope="row" abbr="OPO" class="spec">OPO</th>
-    <td ><img border="0" src="images/green.gif" id="Status_1" /><input type="hidden" name="Status_1" value="1" ></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_1" /><input type="hidden" name="Trend_1" value="1" ></td>
-    <td ><div class="Comment" id="Comment_1" >Comment 1 ... </div><input type="hidden" name="Comment_1" value="1" ></td>
+    <td ><img border="0" src="images/green.gif" id="Status_1" /><input type="hidden" name="Status_1" value="Good"></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_1" /><input type="hidden" name="Trend_1" value="Flat"></td>
+    <td ><div class="Comment" id="Comment_1" >No Comment</div><input type="hidden" name="Comment_1" value="No Comment"></td>
   </tr>
   <tr>
     <th scope="row" abbr="RADIATORS" class="spec">RADIATORS</th>
-    <td ><img border="0" src="images/green.gif" id="Status_2" /><input type="hidden" name="Status_2" value="1" ></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_2" /><input type="hidden" name="Trend_2" value="1" ></td>
-    <td ><div class="Comment" id="Comment_2" >Comment 2 ... </div><input type="hidden" name="Comment_2" value="1" ></td>
+    <td ><img border="0" src="images/green.gif" id="Status_2" /><input type="hidden" name="Status_2" value="Good"></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_2" /><input type="hidden" name="Trend_2" value="Flat"></td>
+    <td ><div class="Comment" id="Comment_2" >No Comment</div><input type="hidden" name="Comment_2" value="No Comment"></td>
   </tr>
   <tr>
     <th scope="row" abbr="TEST HOTEL" class="spec">TEST HOTEL</th>
-    <td ><img border="0" src="images/green.gif" id="Status_3" /><input type="hidden" name="Status_3" value="1" ></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_3" /><input type="hidden" name="Trend_3" value="1" ></td>
-    <td ><div class="Comment" id="Comment_3" >Comment 3 ... </div><input type="hidden" name="Comment_3" value="1" ></td>
+    <td ><img border="0" src="images/green.gif" id="Status_3" /><input type="hidden" name="Status_3" value="Good"></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_3" /><input type="hidden" name="Trend_3" value="Flat"></td>
+    <td ><div class="Comment" id="Comment_3" >No Comment</div><input type="hidden" name="Comment_3" value="No Comment"></td>
   </tr>
   <tr>
     <th scope="row" abbr="LINE" class="spec">LINE</th>
-    <td ><img border="0" src="images/green.gif" id="Status_4" /><input type="hidden" name="Status_4" value="1" ></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_4" /><input type="hidden" name="Trend_4" value="1" ></td>
-    <td ><div class="Comment" id="Comment_4" >Comment 4 ... </div><input type="hidden" name="Comment_4" value="1" ></td>
+    <td ><img border="0" src="images/green.gif" id="Status_4" /><input type="hidden" name="Status_4" value="Good"></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_4" /><input type="hidden" name="Trend_4" value="Flat"></td>
+    <td ><div class="Comment" id="Comment_4" >No Comment</div><input type="hidden" name="Comment_4" value="No Comment"></td>
   </tr>
   <tr>
     <th scope="row" abbr="TOOL/ENVIRONMENT" class="spec">TOOL/ENVIRONMENT</th>
-    <td ><img border="0" src="images/green.gif" id="Status_5" /><input type="hidden" name="Status_5" value="1" ></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_5" /><input type="hidden" name="Trend_5" value="1" ></td>
-    <td ><div class="Comment" id="Comment_5" >Comment 5 ... </div><input type="hidden" name="Comment_5" value="1" ></td>
+    <td ><img border="0" src="images/green.gif" id="Status_5" /><input type="hidden" name="Status_5" value="Good"></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_5" /><input type="hidden" name="Trend_5" value="Flat"></td>
+    <td ><div class="Comment" id="Comment_5" >No Comment</div><input type="hidden" name="Comment_5" value="No Comment"></td>
   </tr>
   <tr>
     <th scope="row" abbr="CI" class="spec">CI</th>
-    <td ><img border="0" src="images/green.gif" id="Status_6" /><input type="hidden" name="Status_6" value="1" ></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_6" /><input type="hidden" name="Trend_6" value="1" ></td>
-    <td ><div class="Comment" id="Comment_6" >Comment 6 ... </div><input type="hidden" name="Comment_6" value="1" ></td>
+    <td ><img border="0" src="images/green.gif" id="Status_6" /><input type="hidden" name="Status_6" value="Good"></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_6" /><input type="hidden" name="Trend_6" value="Flat"></td>
+    <td ><div class="Comment" id="Comment_6" >No Comment</div><input type="hidden" name="Comment_6" value="No Comment"></td>
   </tr>
   <tr>
     <th scope="row" abbr="3GSIM" class="spec">3GSIM</th>
-    <td ><img border="0" src="images/green.gif" id="Status_7" /><input type="hidden" name="Status_7" value="1" ></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_7" /><input type="hidden" name="Trend_7" value="1" ></td>
-    <td ><div class="Comment" id="Comment_7" >Comment 7 ... </div><input type="hidden" name="Comment_7" value="1" ></td>
+    <td ><img border="0" src="images/green.gif" id="Status_7" /><input type="hidden" name="Status_7" value="Good"></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_7" /><input type="hidden" name="Trend_7" value="Flat"></td>
+    <td ><div class="Comment" id="Comment_7" >No Comment</div><input type="hidden" name="Comment_7" value="No Comment"></td>
   </tr>
   <tr>
     <th scope="row" abbr="DEPENDENCIES" class="spec">DEPENDENCIES</th>
-    <td ><img border="0" src="images/green.gif" id="Status_8" /><input type="hidden" name="Status_8" value="1" ></td>
-    <td ><img border="0" src="images/flat.gif" id="Trend_8" /><input type="hidden" name="Trend_8" value="1" ></td>
-    <td ><div class="Comment" id="Comment_8" >Comment 8  ...</div><input type="hidden" name="Comment_8" value="1" ></td>
+    <td ><img border="0" src="images/green.gif" id="Status_8" /><input type="hidden" name="Status_8" value="Good"></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_8" /><input type="hidden" name="Trend_8" value="Flat"></td>
+    <td ><div class="Comment" id="Comment_8" >No Comment</div><input type="hidden" name="Comment_8" value="No Comment"></td>
   </tr>
 </table>
 <input name="new_sprint_name" type="hidden" value="">

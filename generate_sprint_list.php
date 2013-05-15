@@ -33,7 +33,6 @@ if(-1 == $t_sprint_retros_id)
 	get_review_items($t_items);
 	$t_item_values = Array();
 	get_review_item_value_by_id($t_item_values, $t_sprint_retros_id);
-//	var_dump($t_item_values);
 //	echo '###########################################################
 //	';
 	$t_column_index = 0;
