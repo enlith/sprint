@@ -13,11 +13,11 @@ $t_retrosid = gpc_get_int( 'retrosid', $t_retrosid );
 <script src="scripts/jquery-1.9.1.min.js" type="text/javascript"></script>
 <script src="scripts/jquery-ui.js" type="text/javascript"></script>
 <script type="text/javascript">
-		var g_selected_obj_name;
+		var g_selected_obj_id;
 		var g_status_imgs = new Array(); 
     $(document).ready(function ()
     {
-    	$('#mytable').load('generate_sprint_list.php',{ sr_id: '<?php echo $t_retrosid; ?>' } );
+      	$('#mytable').load('generate_sprint_list.php',{ sr_id: '<?php echo $t_retrosid; ?>' } );
         $("#btnClose").click(function (e)
         {
             HideDialog();
@@ -27,41 +27,36 @@ $t_retrosid = gpc_get_int( 'retrosid', $t_retrosid );
         $("#btnSubmit").click(function (e)
         {
             var option = $("#options input:radio:checked").val();
-            var obj = $('[name="'+g_selected_obj_name+'"]');
+            var obj = $('[id="'+g_selected_obj_id+'"]');
+            var inputObj = $('[name="'+g_selected_obj_id+'"]');
             var src = "images/red.gif";
-            var value = "1";
+            //value == option
             if (option == "Good")
             {
             	src = "images/green.gif";
-            	value = "1";
             }
             else if (option == "Ugly")
             {
             	src = "images/yellow.gif";
-            	value = "2";
             }
             else if (option == "Bad")
             {
             	src = "images/red.gif";
-            	value = "3";
             }
             else if (option == "Flat")
             {
             	src = "images/flat.gif";
-            	value = "1";
             }
             else if (option == "Up")
             {
             	src = "images/up.gif";
-            	value = "2";
             }
             else if (option == "Down")
             {
             	src = "images/down.gif";
-            	value = "3";
             }
             obj.attr("src",src);
-            obj.attr("value",value);
+            inputObj.attr("value",option);
             HideDialog();
             e.preventDefault();
         });
@@ -129,38 +124,45 @@ $t_retrosid = gpc_get_int( 'retrosid', $t_retrosid );
 
     });
 
-		$(document).on("click", 'input[name^="Status_"]', function(e){ 
+		$(document).on("click", 'img[id^="Status_"]', function(e){ 
 			e.preventDefault();
-			var name = $(this).attr("name");
-		  updateStatus(name); 
+			var id = $(this).attr("id");
+		  updateStatus(id); 
 		});
 		
-		$(document).on("click", 'img[name^="Trend_"]', function(e){
+		$(document).on("click", 'img[id^="Trend_"]', function(e){
 			e.preventDefault();
-    	var name = $(this).attr("name");
-    	updateTrend(name); 
+    	var id = $(this).attr("id");
+    	updateTrend(id); 
 		});
 
-		$(document).on("click", 'div[name^="Comment_"]', function(e){
+		$(document).on("click", 'div[id^="Comment_"]', function(e){
 			e.preventDefault();
     	var comment = $(this).html();
     	var new_comment = prompt('What is your comment?', comment);
     	if (new_comment) 
     	{
     		$(this).html(new_comment);
-    		$(this).attr("value",new_comment);
+    		var id = $(this).attr("id");
+    		$('[name="'+id+'"]').attr("value",new_comment);
     	}
 		});
+		
+		$( "form" ).on( "submit", function( event ) {
+  event.preventDefault();
+  alert( $(this).serialize() );
+});
 
-		$(document).on("click", '#save_retros', function(){ 
-    	$.ajax({type:'POST', url: 'Retrospectivesave.php', data:$("#RetrospectiveForm :input").serialize(), success: function(response) {
-    	$('#sprint_name').html(response);
-			}});
-		});
+//		$(document).on("click", '#save_retros', function(e){
+//			e.preventDefault();
+//    	$.ajax({type:'POST', url: 'Retrospectivesave.php', data:$("#mytable :input").serialize(), success: function(response) {
+//    	$('#sprint_name').html(response);
+//			}});
+//		});
 
-    function ShowDialog(name)
+    function ShowDialog(id)
     {
-    		g_selected_obj_name = name;
+    		g_selected_obj_id = id;
         $("#overlay").show();
         $("#dialog").fadeIn(300);
 				$("#overlay").unbind("click");
@@ -172,7 +174,7 @@ $t_retrosid = gpc_get_int( 'retrosid', $t_retrosid );
         $("#dialog").fadeOut(300);
     }
 
-    function updateStatus(name)
+    function updateStatus(id)
     {
     	$("#options img[id=option1]").attr("src","images/green.gif");
     	$("#options img[id=option2]").attr("src","images/yellow.gif");
@@ -181,10 +183,10 @@ $t_retrosid = gpc_get_int( 'retrosid', $t_retrosid );
     	$("#options input[id=option2]").attr("value","Ugly");
     	$("#options input[id=option3]").attr("value","Bad");
     	$("#web_dialog_title").html("How was the status?");
-    	ShowDialog(name);
+    	ShowDialog(id);
     }
 
-    function updateTrend(name)
+    function updateTrend(id)
     {
     	$("#options img[id=option1]").attr("src","images/flat.gif");
     	$("#options img[id=option2]").attr("src","images/up.gif");
@@ -193,7 +195,7 @@ $t_retrosid = gpc_get_int( 'retrosid', $t_retrosid );
     	$("#options input[id=option2]").attr("value","Up");
     	$("#options input[id=option3]").attr("value","Down");
     	$("#web_dialog_title").html("How was the trend?");
-    	ShowDialog(name);
+    	ShowDialog(id);
     }
 
   
@@ -250,7 +252,6 @@ get_XFT_Masters();
 <table id="mytable" cellspacing="0" summary="Sprint Retrospective" width="90%">
 <caption>How was the sprint </caption> 
   <tr>
-<!--    <th scope="col" abbr="Item" class="nobg">Item</th>  -->
     <th scope="col" abbr="Item" width="200">Item</th>
     <th scope="col" abbr="Status" width="50">Status</th>
     <th scope="col" abbr="Trend" width="50">Trend</th>
@@ -258,55 +259,56 @@ get_XFT_Masters();
   </tr>
   <tr>
     <th scope="row" abbr="OPO" class="spec">OPO</th>
-    <td ><input type="image" border="0" src="images/green.gif" name="Status_1" value="1" /></td>
-    <td ><input type="image" border="0" src="images/flat.gif" name="Trend_1" value="1" /></td>
-    <td ><div class="Comment" name="Comment_1" value="Comment 1 ... " >Comment 1 ... </div></td>
+    <td ><img border="0" src="images/green.gif" id="Status_1" /><input type="hidden" name="Status_1" value="1" ></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_1" /><input type="hidden" name="Trend_1" value="1" ></td>
+    <td ><div class="Comment" id="Comment_1" >Comment 1 ... </div><input type="hidden" name="Comment_1" value="1" ></td>
   </tr>
   <tr>
     <th scope="row" abbr="RADIATORS" class="spec">RADIATORS</th>
-    <td ><input type="image" border="0" src="images/green.gif" name="Status_2" value="1" /></td>
-    <td ><input type="image" border="0" src="images/flat.gif" name="Trend_2" value="1" /></td>
-    <td ><div class="Comment" name="Comment_2" value="Comment 2 ... " >Comment 2 ... </div></td>
+    <td ><img border="0" src="images/green.gif" id="Status_2" /><input type="hidden" name="Status_2" value="1" ></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_2" /><input type="hidden" name="Trend_2" value="1" ></td>
+    <td ><div class="Comment" id="Comment_2" >Comment 2 ... </div><input type="hidden" name="Comment_2" value="1" ></td>
   </tr>
   <tr>
     <th scope="row" abbr="TEST HOTEL" class="spec">TEST HOTEL</th>
-    <td ><input type="image" border="0" src="images/green.gif" name="Status_3" value="1" /></td>
-    <td ><input type="image" border="0" src="images/flat.gif" name="Trend_3" value="1" /></td>
-    <td ><div class="Comment" name="Comment_3" value="Comment 3 ... " >Comment 3 ... </div></td>
+    <td ><img border="0" src="images/green.gif" id="Status_3" /><input type="hidden" name="Status_3" value="1" ></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_3" /><input type="hidden" name="Trend_3" value="1" ></td>
+    <td ><div class="Comment" id="Comment_3" >Comment 3 ... </div><input type="hidden" name="Comment_3" value="1" ></td>
   </tr>
   <tr>
     <th scope="row" abbr="LINE" class="spec">LINE</th>
-    <td ><input type="image" border="0" src="images/green.gif" name="Status_4" value="1" /></td>
-    <td ><input type="image" border="0" src="images/flat.gif" name="Trend_4" value="1" /></td>
-    <td ><div class="Comment" name="Comment_4" value="Comment 4 ... " >Comment 4 ... </div></td>
+    <td ><img border="0" src="images/green.gif" id="Status_4" /><input type="hidden" name="Status_4" value="1" ></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_4" /><input type="hidden" name="Trend_4" value="1" ></td>
+    <td ><div class="Comment" id="Comment_4" >Comment 4 ... </div><input type="hidden" name="Comment_4" value="1" ></td>
   </tr>
   <tr>
     <th scope="row" abbr="TOOL/ENVIRONMENT" class="spec">TOOL/ENVIRONMENT</th>
-    <td ><input type="image" border="0" src="images/green.gif" name="Status_5" value="1" /></td>
-    <td ><input type="image" border="0" src="images/flat.gif" name="Trend_5" value="1" /></td>
-    <td ><div class="Comment" name="Comment_5" value="Comment 5 ... " >Comment 5 ... </div></td>
+    <td ><img border="0" src="images/green.gif" id="Status_5" /><input type="hidden" name="Status_5" value="1" ></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_5" /><input type="hidden" name="Trend_5" value="1" ></td>
+    <td ><div class="Comment" id="Comment_5" >Comment 5 ... </div><input type="hidden" name="Comment_5" value="1" ></td>
   </tr>
   <tr>
     <th scope="row" abbr="CI" class="spec">CI</th>
-    <td ><input type="image" border="0" src="images/green.gif" name="Status_6" value="1" /></td>
-    <td ><input type="image" border="0" src="images/flat.gif" name="Trend_6" value="1" /></td>
-    <td ><div class="Comment" name="Comment_6" value="Comment 6 ... " >Comment 6 ... </div></td>
+    <td ><img border="0" src="images/green.gif" id="Status_6" /><input type="hidden" name="Status_6" value="1" ></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_6" /><input type="hidden" name="Trend_6" value="1" ></td>
+    <td ><div class="Comment" id="Comment_6" >Comment 6 ... </div><input type="hidden" name="Comment_6" value="1" ></td>
   </tr>
   <tr>
     <th scope="row" abbr="3GSIM" class="spec">3GSIM</th>
-    <td ><input type="image" border="0" src="images/green.gif" name="Status_7" value="1" /></td>
-    <td ><input type="image" border="0" src="images/flat.gif" name="Trend_7" value="1" /></td>
-    <td ><div class="Comment" name="Comment_7" value="Comment 7 ... " >Comment 7 ... </div></td>
+    <td ><img border="0" src="images/green.gif" id="Status_7" /><input type="hidden" name="Status_7" value="1" ></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_7" /><input type="hidden" name="Trend_7" value="1" ></td>
+    <td ><div class="Comment" id="Comment_7" >Comment 7 ... </div><input type="hidden" name="Comment_7" value="1" ></td>
   </tr>
   <tr>
     <th scope="row" abbr="DEPENDENCIES" class="spec">DEPENDENCIES</th>
-    <td ><input type="image" border="0" src="images/green.gif" name="Status_8" value="1" /></td>
-    <td ><input type="image" border="0" src="images/flat.gif" name="Trend_8" value="1" /></td>
-    <td ><div class="Comment" name="Comment_8" value="Comment 8 ... " >Comment 8  ...</div></td>
+    <td ><img border="0" src="images/green.gif" id="Status_8" /><input type="hidden" name="Status_8" value="1" ></td>
+    <td ><img border="0" src="images/flat.gif" id="Trend_8" /><input type="hidden" name="Trend_8" value="1" ></td>
+    <td ><div class="Comment" id="Comment_8" >Comment 8  ...</div><input type="hidden" name="Comment_8" value="1" ></td>
   </tr>
 </table>
 <input name="new_sprint_name" type="hidden" value="">
-<div class="ui-widget"><input type="image" name="save_retros" value="<?php echo $t_retrosid ?>" src="images/save.jpg" alt="Submit"/></div>
+<input type="hidden" name="save_retros" value="<?php echo $t_retrosid ?>" />
+<div class="ui-widget"><input type="image" src="images/save.jpg" alt="Submit"/></div>
 </form>
 
     <div id="overlay" class="web_dialog_overlay"></div>

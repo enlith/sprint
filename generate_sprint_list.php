@@ -47,12 +47,12 @@ if(-1 == $t_sprint_retros_id)
 		foreach ($t_columns as $id => $column) {
 			if("Comment" == $column)
 			{
-				echo '    <td ><div class="'.$column.'" name="'.$column.'_'.$t_item_index.'" value="'.$t_item_values[$item_id][$column].'" >'.$t_item_values[$item_id][$column].'</div></td>
+				echo '    <td ><div class="'.$column.'" id="'.$column.'_'.$t_item_index.'" >'.$t_item_values[$item_id][$column].'</div><input type="hidden" name="'.$column.'_'.$t_item_index.'"   value="'.$t_item_values[$item_id][$column].'" />'.'</td>
 ';
 			}
 			else
 			{
-				echo '    <td ><input type="image" class="'.$column.'" src="'.get_img_src_by_item_value($column,$t_item_values[$item_id][$column]).'" name="'.$column.'_'.$t_item_index.'"  value="'.$t_item_index.'" /></td>
+				echo '    <td ><img class="'.$column.'" src="'.get_img_src_by_item_value($column,$t_item_values[$item_id][$column]).'" id="'.$column.'_'.$t_item_index.'" /><input type="hidden" name="'.$column.'_'.$t_item_index.'"   value="'.$t_item_values[$item_id][$column].'" /></td>
 ';
 			}
 	  }
